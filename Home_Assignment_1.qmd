@@ -1,0 +1,211 @@
+---
+title: "Home Assignment 1"
+format: 
+    html:
+      toc: true
+      toc_float: true
+      toc-location: left
+      mainfont: cursive
+      embed-resources: true
+execute: 
+  echo: false
+  warning: false
+  error: TRUE
+---
+
+```{r setup, include = FALSE }
+knitr::opts_chunk$set(echo = TRUE, error = TRUE, warning = FALSE)
+```
+
+# Solve the following questions/tasks: 
+
+1 .Import Chicago_small.xlsx from and show first 10 rows and first 5 columns. How many rows and columns does the dataframe have? Remove the Ward and ID columns and store data to a chicago_new variable! Rename column Domestic to Home! With sapply display the columns classes and with tapply show the number of crimes per year. Create EDA and describe data. (5)
+
+```{r}
+#| echo: false 
+# Load necessary libraries
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(dplyr)
+library(knitr)
+library(janitor)
+library(gt)
+library(DT)
+```
+
+```{r}
+#| echo: false 
+# Import the dataset
+chicago_data <- read_excel("Chicago_small.xlsx")
+```
+
+
+
+### Show the first 10 rows and first 5 columns head(chicago_data, 10)\[, 1:5\].
+
+::: {.column width="100%"}
+```{r}
+#| echo: false 
+head(chicago_data, 10)[, 1:5] %>% 
+  clean_names() %>% 
+  gt()
+```
+:::
+
+
+### Display the number of rows and columns
+
+::: {.column width="25%"}
+```{r}
+#| echo: false 
+dim_df <- data.frame(Dimension = c("Rows", "Columns"), 
+                     Value = dim(chicago_data))
+dim_df %>% 
+  clean_names() %>%
+  head() %>%
+  gt()
+```
+
+:::
+### Remove the 'Ward' and 'ID' columns and store the data in a new variable
+
+::: {.column width="100%"}
+
+```{r}
+#| echo: false 
+chicago_new <- chicago_data %>% select(-Ward, -ID)
+chicago_new %>%
+  clean_names() %>%
+  head() %>%
+  gt()
+```
+
+:::
+
+### Rename column 'Domestic' to 'Home' and Display the column classes using sapply
+::: panel-tabset
+
+#### Rename 
+```{r}
+#| echo: false 
+chicago_new <- rename(chicago_new, Home = Domestic)
+
+chicago_new %>%
+  clean_names() %>%
+  head() %>%
+  gt()
+```
+
+#### Display the column
+
+```{r}
+#| echo: false 
+display <- sapply(chicago_new, class)
+
+display %>% 
+  clean_names() %>%
+  head() %>% 
+  kable()
+
+```
+
+:::
+
+### Extract the year from the Date column and count crimes per year
+
+::: {.column width="20%"}
+
+```{r}
+#| echo: false 
+chicago_new <- as.data.frame(chicago_new)
+
+chicago_new %>%
+  mutate(Year = year(mdy_hms(Date))) %>% 
+  count(Year) %>% 
+  clean_names() %>%
+  head() %>%
+  kable()
+```
+
+::::
+
+2. Split the column Date to Date and Time vectors and transform the Date vector to date type and Time vector to time type (neglect AM/PM).  Which hours seem to be the most dangerous.(5)
+
+::: panel-tabset
+
+### Split the Date column into Date and Time
+
+```{r}
+#| echo: false 
+chicago_new <- chicago_new %>%
+  separate(Date, into = c("Date", "Time"), sep = " ") 
+
+chicago_new %>%
+  clean_names() %>%
+  head() %>%
+  gt()
+```
+
+### Convert Date and Time columns to appropriate types
+
+```{r}
+#| echo: false 
+chicago_new <- chicago_new %>%
+  mutate(Date = mdy(Date),
+         Time = hms(Time))
+
+chicago_new %>%
+  clean_names() %>%
+  head() %>%
+  gt()
+```
+
+
+### Extract hour from Time and analyze the most dangerous hours
+```{r}
+#| echo: false 
+chicago_new %>%
+  mutate(Hour = hour(Time)) %>%
+  group_by(Hour) %>%
+  summarise(Crime_Count = n()) %>%
+  arrange(desc(Crime_Count)) %>% 
+  clean_names() %>%
+  head() %>%
+  gt()
+
+```
+
+:::
+
+
+3. Write a user defined function called AverageVowels, which will calculate the average number of vowels per input string (number of vowels/the length of the input string rounded to 2 decimal places). You should check that the input parameter is string. The function MUST include the for loop! (5) 
+
+
+```{r}
+#| echo: false 
+AverageVowels <- function(input_string) {
+    if (!is.character(input_string) || length(input_string) != 1) {
+        stop("Input must be a single string")
+    }
+    
+    vowels <- c("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
+    
+    vowel_count <- 0
+
+    for (char in strsplit(input_string, "")[[1]]) {
+        if (char %in% vowels) {
+            vowel_count <- vowel_count + 1
+        }
+    }
+    
+    round(vowel_count / nchar(input_string), 2)
+}
+```
+```{r}
+
+AverageVowels("John")   
+AverageVowels("Jim")    
+AverageVowels("Eugene")
+```
+

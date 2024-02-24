@@ -1,0 +1,70 @@
+---
+title: "Home assgnment 1"
+revealjs:
+    self-contained: true
+    transition: fade
+    slide-number: true
+    progress: true
+    embed-resources: true
+editor: visual
+execution:
+  error: TRUE 
+---
+
+## Introduction
+
+-   **Topic:** Data Preparation and Initial Analysis
+-   **Brief introduction**: Outline the objective of the analysis, which is to explore crime data in Chicago, understand patterns, and draw insights.
+-   **Method**: Data manipulation and analysis using R
+
+------------------------------------------------------------------------
+
+## Data Preparation and Initial Analysis
+
+-   Imported 'Chicago_small.xlsx', focusing on crime data.
+
+-   Initial display: First 10 rows & 5 columns, highlighting key crime types and locations.
+
+-   Dataset originally had 200 rows and 11 columns.
+
+-   Modifications included:
+
+    -   Removal of 'Ward' and 'ID' columns.
+
+    -   Renaming 'Domestic' column to 'Home'.
+
+-   Data types identified using **`sapply`**.
+
+-   EDA (Exploratory Data Analysis) conducted to understand crime trends.
+
+------------------------------------------------------------------------
+
+### Time-Based Analysis of Crime Data
+
+-   Split 'Date' column into separate 'Date' and 'Time' columns.
+
+-   Conversion to appropriate data types, omitting AM/PM in 'Time'.
+
+-   Analysis focused on identifying most dangerous hours in Chicago.
+
+-   Key finding: Specific hours showing higher crime rates (Need your input on specific hours if available).
+
+-   Visual or table showing crime frequency by hour could be added (if data is available).Key Findings
+
+------------------------------------------------------------------------
+
+### Text Analysis with Custom Function
+
+-   Developed a custom function **`AverageVowels`** to analyze text data.
+
+-   Purpose: Calculate the average number of vowels per input string.
+
+-   Ensured input is a string and used a for loop for calculation.
+
+-   Example outputs:
+
+    -   **`AverageVowels("John")`** yields 0.25.
+
+    -   **`AverageVowels("Jim")`** yields 0.33.
+
+    -   **`AverageVowels("Eugene")`** yields 0.67.
